@@ -1,0 +1,42 @@
+{
+  "packages": ["packages/*"],
+  "useNx": true,
+  "version": "independent",
+  "useWorkspaces": true,
+  "command": {
+    "bootstrap": {
+      "hoist": [
+        "@babel/plugin-transform-runtime",
+        "@babel/preset-env",
+        "@babel/preset-typescript",
+        "@rollup/plugin-babel",
+        "@rollup/plugin-eslint",
+        "@rollup/plugin-node-resolve",
+        "@types/jest",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
+        "eslint",
+        "jest",
+        "jest-environment-jsdom",
+        "lint-staged",
+        "prettier",
+        "rollup",
+        "rollup-plugin-terser",
+        "rollup-plugin-typescript2",
+        "ts-jest",
+        "tslib",
+        "typescript"
+      ]
+    },
+    "version": {
+      "message": "feat: publish"
+    }
+  },
+  "ignoreChanges": [
+    "**/coverage/**",
+    "**/__tests__/**",
+    "**/*.md",
+    "**/dist",
+    "**/node_module"
+  ]
+}

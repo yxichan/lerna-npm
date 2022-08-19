@@ -1,0 +1,35 @@
+{
+  "name": "lerna-npm",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "create": "ts-node scripts/create/index.ts",
+    "test": "ts-node scripts/test/index.ts",
+    "build": "ts-node scripts/build/index.ts",
+    "link": "ts-node scripts/link/link.ts",
+    "unlink": "ts-node scripts/link/unlink.js",
+    "release": "lerna publish from-package",
+    "version": "lerna version"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@types/inquirer": "^9.0.1",
+    "@types/metalsmith": "^2.3.1",
+    "@types/node": "^18.7.6",
+    "@types/rimraf": "^3.0.2",
+    "husky": "^4.2.3",
+    "inquirer": "^8.0.0",
+    "lerna": "^5.1.8",
+    "metalsmith": "^2.5.0",
+    "nx": "^14.4.3",
+    "ts-node": "^10.9.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}
