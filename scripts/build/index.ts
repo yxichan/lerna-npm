@@ -20,7 +20,7 @@ build = ({ sBuildType, vPackages }) => {
   } else {
     vPackages &&
       vPackages.forEach(async pkg => {
-        await run('lerna', ['run', 'build', `--scope=${pkg}`])
+        await run('lerna', ['run', 'build', `--scope=lernanpm-${pkg}`])
       })
   }
 }
