@@ -1,11 +1,11 @@
 {
-  "name": "lernanpm-utils",
-  "version": "0.0.1",
+  "name": "lernanpm-yxutils",
+  "version": "0.0.0",
   "description": "public tools",
   "keywords": [
     "npm",
     "lernanpm",
-    "utils"
+    "yxutils"
   ],
   "repository": {
     "type": "git",
@@ -13,8 +13,8 @@
   },
   "license": "ISC",
   "author": "lerna-npm",
-  "main": "dist/utils.cjs.prod.js",
-  "module": "dist/utils.esm.prod.js",
+  "main": "dist/yxutils.cjs.prod.js",
+  "module": "dist/yxutils.esm.prod.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",

@@ -1,11 +1,11 @@
 {
-  "name": "lernanpm-test",
-  "version": "0.0.1",
+  "name": "lernanpm-yxtest",
+  "version": "0.0.0",
   "description": "test",
   "keywords": [
     "npm",
     "lernanpm",
-    "test"
+    "yxtest"
   ],
   "repository": {
     "type": "git",
@@ -13,8 +13,8 @@
   },
   "license": "ISC",
   "author": "lerna-npm",
-  "main": "dist/test.cjs.prod.js",
-  "module": "dist/test.esm.prod.js",
+  "main": "dist/yxtest.cjs.prod.js",
+  "module": "dist/yxtest.esm.prod.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",

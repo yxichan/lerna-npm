@@ -15,8 +15,8 @@ function cjsConfig(prod, type) {
     input: 'src/index.ts',
     output: {
       file: prod
-        ? `dist/test.${type === 'cjs' ? 'cjs' : 'esm'}.prod.js`
-        : `dist/test.${type === 'cjs' ? 'cjs' : 'esm'}.js`,
+        ? `dist/yxtest.${type === 'cjs' ? 'cjs' : 'esm'}.prod.js`
+        : `dist/yxtest.${type === 'cjs' ? 'cjs' : 'esm'}.js`,
       format: type,
       indent: false
     },
