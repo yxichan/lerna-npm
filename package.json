@@ -11,7 +11,7 @@
     "link": "ts-node scripts/link/link.ts",
     "unlink": "ts-node scripts/link/unlink.ts",
     "release": "lerna publish from-package",
-    "version": "lerna version"
+    "version": "lerna version --access=public"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
