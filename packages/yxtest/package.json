@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.9"
+    "@babel/runtime": "^7.18.9",
+    "lernanpm-yxutils": "^0.0.1"
   }
 }
