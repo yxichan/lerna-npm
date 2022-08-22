@@ -1,5 +1,3 @@
-import { say } from '@lernanpm/utils'
-
 /**
  * 打印名字
  * @param { string } sFirstName
@@ -11,5 +9,5 @@ interface IprintName {
 }
 export let printName: IprintName
 printName = (sFirstName: string, sLastName: string) => {
-  say(sFirstName + sLastName)
+  console.log(sFirstName + sLastName)
 }
