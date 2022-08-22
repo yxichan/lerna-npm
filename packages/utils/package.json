@@ -11,6 +11,7 @@
     "type": "git",
     "url": "https://github.com/yxichan/lerna-npm.git"
   },
+  "access": "public",
   "license": "ISC",
   "author": "yxchan",
   "main": "dist/utils.cjs.prod.js",
@@ -53,5 +54,5 @@
   "dependencies": {
     "@babel/runtime": "^7.18.9"
   },
-  "gitHead": "cd3cbda4b148c4039ee7196d4a9521925a01e127"
+  "gitHead": "aba576f16dfb28ea6e0e3116639ffc0d956305b0"
 }
