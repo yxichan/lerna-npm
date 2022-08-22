@@ -7,5 +7,5 @@ interface Isay {
 }
 export let say: Isay
 say = (val: string) => {
-  console.log(val)
+  console.log(val.split('').join(''))
 }
