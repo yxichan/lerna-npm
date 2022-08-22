@@ -18,7 +18,7 @@ test = ({ sTestType, sTargetModule }) => {
     run('lerna', ['run', 'test', '--no-sort'])
     // 自定义版本控制方式
   } else {
-    run('lerna', ['run', 'test', `--scope=${sTargetModule}`])
+    run('lerna', ['run', 'test', `--scope=@lernanpm/${sTargetModule}`])
   }
 }
 

@@ -1,9 +1,11 @@
 /**
- * 返回相加值
- * @param {Number} left
- * @param {Number} right
- * @return {Number}
+ * print 'Hello world!'
+ * @return {void}
  */
-export function sum(left: number, right: number): number {
-  return left + right
+interface Isay {
+  (): void
+}
+export let say: Isay
+say = () => {
+  console.log('Hello world!')
 }

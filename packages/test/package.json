@@ -1,20 +1,20 @@
 {
-  "name": "@lernanpm/{{pkgName}}",
+  "name": "@lernanpm/test",
   "version": "0.0.0",
-  "description": "{{description}}",
+  "description": "test",
   "keywords": [
     "npm",
     "lernanpm",
-    "{{pkgName}}"
+    "test"
   ],
   "repository": {
     "type": "git",
     "url": ""
   },
   "license": "ISC",
-  "author": "{{name}}",
-  "main": "dist/{{pkgName}}.cjs.prod.js",
-  "module": "dist/{{pkgName}}.esm.prod.js",
+  "author": "yxchan",
+  "main": "dist/test.cjs.prod.js",
+  "module": "dist/test.esm.prod.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.9"
+    "@babel/runtime": "^7.18.9",
+    "@lernanpm/utils": "^0.0.0"
   }
 }

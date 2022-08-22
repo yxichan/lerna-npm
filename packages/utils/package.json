@@ -1,20 +1,20 @@
 {
-  "name": "@lernanpm/{{pkgName}}",
+  "name": "@lernanpm/utils",
   "version": "0.0.0",
-  "description": "{{description}}",
+  "description": "public tools",
   "keywords": [
     "npm",
     "lernanpm",
-    "{{pkgName}}"
+    "utils"
   ],
   "repository": {
     "type": "git",
     "url": ""
   },
   "license": "ISC",
-  "author": "{{name}}",
-  "main": "dist/{{pkgName}}.cjs.prod.js",
-  "module": "dist/{{pkgName}}.esm.prod.js",
+  "author": "yxchan",
+  "main": "dist/utils.cjs.prod.js",
+  "module": "dist/utils.esm.prod.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",

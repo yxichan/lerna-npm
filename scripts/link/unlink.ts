@@ -5,18 +5,18 @@ import { unlinkConfig } from './config'
 
 /**
  * 卸载依赖
- * @param {Object} payload iTargetModule(目标项目)、iDelModule(卸载依赖名称)
+ * @param {Object} payload sTargetModule(目标项目)、sDelModule(卸载依赖名称)
  * @returns {void}
  */
 interface Iuninstall {
-  (payload: { iTargetModule: string; iDelModule: string }): void
+  (payload: { sTargetModule: string; sDelModule: string }): void
 }
 let uninstall: Iuninstall
-uninstall = ({ iTargetModule, iDelModule }) => {
+uninstall = ({ sTargetModule, sDelModule }) => {
   run('lerna', [
     'exec',
-    `--scope=${iTargetModule}`,
-    `npm uninstall ${iDelModule}`
+    `--scope=@lernanpm/${sTargetModule}`,
+    `npm uninstall ${sDelModule}`
   ])
 }
 
