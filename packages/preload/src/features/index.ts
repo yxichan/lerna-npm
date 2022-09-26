@@ -43,11 +43,8 @@ export default class Preload {
    * @returns { void }
    */
   public addResource(resources: Array<Iresources>): void {
-    const preload = resources.filter(resource => resource.preload)
-    this.resources = [
-      ...this.resources,
-      ...preload // 过滤掉不需要预加载的资源
-    ]
+    const preload = resources.filter(resource => resource.preload) // 过滤掉不需要预加载的资源
+    this.resources = [...this.resources, ...preload]
     this.total = this.resources.length
 
     // 分类
