@@ -15,7 +15,7 @@ let uninstall: Iuninstall
 uninstall = ({ sTargetModule, sDelModule }) => {
   run('lerna', [
     'exec',
-    `--scope=lernanpm-${sTargetModule}`,
+    `--scope=yx-${sTargetModule}`,
     `npm uninstall ${sDelModule}`
   ])
 }

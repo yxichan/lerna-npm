@@ -25,7 +25,7 @@ install = ({ sInstallType, sInstallModule, sTargetModule, sOption }) => {
   } else {
     run(
       'lerna',
-      ['add', sInstallModule || '', `--scope=lernanpm-${sTargetModule}`].concat(
+      ['add', sInstallModule || '', `--scope=yx-${sTargetModule}`].concat(
         sOption === 'normal' ? [] : [`--${sOption}`]
       )
     )
