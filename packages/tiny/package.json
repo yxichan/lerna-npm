@@ -16,6 +16,9 @@
   "main": "dist/tiny.cjs.prod.js",
   "module": "dist/tiny.esm.prod.js",
   "types": "dist/types/index.d.ts",
+  "bin": {
+    "tiny": "./bin/index.js"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "lint": "eslint src/* --ext .js,.ts",

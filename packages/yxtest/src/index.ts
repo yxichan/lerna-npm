@@ -1,1 +1,0 @@
-export { printName } from './features'
