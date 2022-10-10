@@ -10,7 +10,7 @@ import { byteSize } from './features/index'
 import Slogbar from 'slog-progress'
 const cpuNums = Os.cpus().length
 let bar = new Slogbar('进度 :percent  :token :bar  :current/:total \n', 50)
-let spinner: Ora.Ora // ora载体
+let spinner: Ora.Ora // ora 载体
 let inputSize = 0 // 输入总体积
 let outputSize = 0 // 输出总体积
 let ratio = 0 // 压缩比
