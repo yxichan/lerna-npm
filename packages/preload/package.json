@@ -1,6 +1,6 @@
 {
   "name": "yx-preload",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "静态资源预加载工具",
   "keywords": [
     "npm",
