@@ -60,6 +60,7 @@
     "chalk": "4.1.0",
     "inquirer": "8.0.0",
     "ora": "5.4.1",
+    "pako": "1.0.6",
     "protobufjs": "6.9.0",
     "slog-progress": "1.1.4"
   },
