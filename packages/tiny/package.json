@@ -59,5 +59,6 @@
     "ora": "5.4.1",
     "protobufjs": "6.9.0",
     "slog-progress": "1.1.4"
-  }
+  },
+  "gitHead": "a524a794a22ab01cfddc8c7822b56f64fe35a583"
 }
