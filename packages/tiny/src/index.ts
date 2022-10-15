@@ -214,7 +214,7 @@ mapFolder = async (folderList: Array<string>) => {
           const dateStart = +new Date()
 
           cluster.setupPrimary({
-            exec: resolve(__dirname, 'features/process.ts')
+            exec: resolve(__dirname, 'features/process.js')
           })
 
           // 若资源数小于则创建一个进程，否则创建多个进程
