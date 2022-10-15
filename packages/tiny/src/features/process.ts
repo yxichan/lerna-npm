@@ -1,8 +1,7 @@
 import { imageType, Idetail, IsvgaData } from './../interface'
-import { upload, download, toArrayBuffer, toBuffer } from './index'
+import { upload, download, toArrayBuffer, toBuffer, tagBuf } from './index'
 import fs from 'fs'
 import chalk from 'chalk'
-import process from 'node:process'
 import protobuf from 'protobufjs/light'
 import svgaDescriptor from './proto'
 
@@ -44,6 +43,10 @@ compressImg = ({ path, file }: imageType) => {
       result.input = dataUpload.input.size
       result.output = dataUpload.output.size
       result.ratio = 1 - dataUpload.output.ratio
+      // result.file = Buffer.concat([
+      //   Buffer.alloc(dataDownload.length, dataDownload, 'binary'),
+      //   tagBuf
+      // ])
       result.file = Buffer.alloc(dataDownload.length, dataDownload, 'binary')
     } catch (err) {
       result.msg = `[${chalk.blue(path)}] ${chalk.red(JSON.stringify(err))}`
@@ -132,7 +135,7 @@ process.on('message', (tasks: imageType[]) => {
       details.map(
         ({ path, file }) =>
           new Promise((resolve, reject) => {
-            fs.writeFile(path, file, err => {
+            fs.writeFile(path, Buffer.concat([file, tagBuf]), err => {
               if (err) reject(err)
               resolve(true)
             })

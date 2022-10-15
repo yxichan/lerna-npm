@@ -161,3 +161,7 @@ toBuffer = ab => {
   }
   return buf
 }
+
+// 用于标识该文件是否被压缩过
+export const tagBuf = Buffer.from('tiny', 'binary')
+export const tagLen = tagBuf.length

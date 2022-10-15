@@ -6,11 +6,11 @@ import Ora from 'ora'
 import { imageType, Idetail } from './interface'
 import cluster from 'cluster'
 import Os from 'os'
-import { byteSize } from './features/index'
+import { byteSize, tagBuf, tagLen, toArrayBuffer } from './features/index'
 import Slogbar from 'slog-progress'
 const cpuNums = Os.cpus().length
 let bar = new Slogbar('进度 :percent  :token :bar  :current/:total \n', 50)
-let spinner: Ora.Ora // ora 载体
+let spinner: Ora.Ora // ora载体
 let inputSize = 0 // 输入总体积
 let outputSize = 0 // 输出总体积
 let ratio = 0 // 压缩比
@@ -94,19 +94,77 @@ interface ImapFolder {
   (folderList: Array<string>): void
 }
 let mapFolder: ImapFolder
-mapFolder = (folderList: Array<string>) => {
+mapFolder = async (folderList: Array<string>) => {
   let target: Array<imageType> = []
   // 查找目标文件夹内的图片资源
   folderList.forEach(path => {
     target = [...target, ...deepFindImg(path)]
   })
   if (target.length) {
-    const svgaNum = target.filter(ele => /\.(svga)$/.test(ele.path)).length
+    const noCompressList: Array<imageType> = []
+    const hasCompressList: Array<imageType> = []
+    let len = 0
+
+    while (len < target.length) {
+      const { path } = target[len]
+      let data = ''
+      const curBuf: Buffer = await new Promise((resolve, reject) => {
+        const readerStream = fs.createReadStream(path)
+        readerStream.setEncoding('utf8')
+        readerStream.on('data', chunk => {
+          data += chunk
+        })
+        readerStream.on('end', () => {
+          const buf = Buffer.alloc(data.length, data, 'binary')
+          resolve(
+            Buffer.from(
+              toArrayBuffer(buf).slice(buf.length - tagLen, buf.length)
+            )
+          )
+        })
+        readerStream.on('error', err => {
+          reject(err.stack)
+        })
+      })
+      try {
+        if (curBuf.compare(tagBuf) !== 0) {
+          noCompressList.push(target[len])
+        } else {
+          hasCompressList.push(target[len])
+        }
+      } catch (err) {
+        spinner.fail(`读取 ${path} 资源失败！`)
+      }
+      len++
+    }
+
+    // 未压缩的svga数量
+    const noCompressSvgaNum = noCompressList.filter(ele =>
+      /\.(svga)$/.test(ele.path)
+    ).length
+    // 未压缩的图片数量
+    const noCompressImageNum = noCompressList.length - noCompressSvgaNum
+
+    // 已压缩的svga数量
+    const hasCompressSvgaNum = hasCompressList.filter(ele =>
+      /\.(svga)$/.test(ele.path)
+    ).length
+    // 已压缩的图片数量
+    const hasCompressImageNum = hasCompressList.length - hasCompressSvgaNum
+
     spinner.succeed(
-      `发现 ${chalk.blueBright(
-        target.length - svgaNum
-      )} 个图片资源, ${chalk.blueBright(svgaNum)} 个svga资源！`
+      `发现 ${chalk.blue(target.length)} 个资源!\n已压缩: ${chalk.green(
+        hasCompressImageNum
+      )} 个图片, ${chalk.green(hasCompressSvgaNum)} 个svga\n可压缩: ${chalk.red(
+        noCompressImageNum
+      )} 个图片, ${chalk.red(noCompressSvgaNum)} 个svga\n`
     )
+
+    if (!noCompressList.length) {
+      spinner.fail(`当前没有可压缩资源！`)
+      spinner.stop()
+      return
+    }
     inquirer
       .prompt([
         {
@@ -145,7 +203,7 @@ mapFolder = (folderList: Array<string>) => {
           compressList: Array<imageType>
         }) => {
           // 根据用户选择处理对应的资源
-          const list = compressType == 'all' ? target : compressList
+          const list = compressType == 'all' ? noCompressList : compressList
           if (!list.length) {
             spinner.fail(`当前没有可压缩资源！`)
             spinner.stop()
@@ -156,7 +214,7 @@ mapFolder = (folderList: Array<string>) => {
           const dateStart = +new Date()
 
           cluster.setupPrimary({
-            exec: resolve(__dirname, 'features/process.js')
+            exec: resolve(__dirname, 'features/process.ts')
           })
 
           // 若资源数小于则创建一个进程，否则创建多个进程
