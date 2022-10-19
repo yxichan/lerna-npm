@@ -1,6 +1,6 @@
 {
   "name": "yx-tiny",
-  "version": "0.0.9",
+  "version": "0.0.10-alpha.0",
   "description": "图片压缩工具",
   "keywords": [
     "npm",
