@@ -31,9 +31,12 @@ compressImg = ({ path, file }: imageType) => {
       ratio: 0,
       path,
       file,
-      msg: ''
+      msg: '',
+      time: 0
     }
     try {
+      const start = +new Date()
+
       // 上传
       const dataUpload = await upload(file)
 
@@ -48,6 +51,8 @@ compressImg = ({ path, file }: imageType) => {
       //   tagBuf
       // ])
       result.file = Buffer.alloc(dataDownload.length, dataDownload, 'binary')
+
+      result.time = +new Date() - start
     } catch (err) {
       result.msg = `[${chalk.blue(path)}] ${chalk.red(JSON.stringify(err))}`
     }
@@ -73,9 +78,12 @@ compressSvga = (path, source) => {
       ratio: 0,
       path,
       file: source,
+      time: 0,
       msg: ''
     }
     try {
+      const start = +new Date()
+
       // 解码svga
       const data = ProtoMovieEntity.decode(
         pako.inflate(toArrayBuffer(source))
@@ -99,6 +107,8 @@ compressSvga = (path, source) => {
       result.output = file.length
       result.ratio = 1 - file.length / source.length
       result.file = file
+
+      result.time = +new Date() - start
     } catch (err) {
       result.msg = `[${chalk.blue(path)}] ${chalk.red(JSON.stringify(err))}`
     }

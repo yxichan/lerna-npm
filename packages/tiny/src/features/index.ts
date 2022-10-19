@@ -165,3 +165,23 @@ toBuffer = ab => {
 // 用于标识该文件是否被压缩过
 export const tagBuf = Buffer.from('tiny', 'binary')
 export const tagLen = tagBuf.length
+
+/**
+ * 转 buffer
+ * @param { Uint8Array }
+ * @returns { Buffer }
+ */
+interface IfilterFileName {
+  (path: string): string
+}
+export let filterFileName: IfilterFileName
+filterFileName = path => {
+  let filename: string
+  if (path.indexOf('/') !== -1) {
+    filename = path.substring(path.lastIndexOf('/') + 1, path.length)
+  } else {
+    filename = path
+  }
+
+  return filename
+}

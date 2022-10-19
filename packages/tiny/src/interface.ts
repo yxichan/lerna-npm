@@ -48,6 +48,7 @@ export interface Idetail {
   ratio: number
   path: string
   file: Buffer
+  time?: number
   msg?: string
 }
 

@@ -4,10 +4,17 @@ import { resolve } from 'path'
 import fs from 'fs'
 import Ora from 'ora'
 import { imageType, Idetail } from './interface'
-import cluster from 'cluster'
 import Os from 'os'
-import { byteSize, tagBuf, tagLen, toArrayBuffer } from './features/index'
+import {
+  byteSize,
+  tagBuf,
+  tagLen,
+  toArrayBuffer,
+  filterFileName
+} from './features/index'
 import Slogbar from 'slog-progress'
+const CG = require('console-grid')
+const cluster = require('cluster')
 const cpuNums = Os.cpus().length
 let bar = new Slogbar('进度 :percent  :token :bar  :current/:total \n', 50)
 let spinner: Ora.Ora // ora载体
@@ -25,25 +32,22 @@ interface IfindFolder {
 }
 let findFolder: IfindFolder
 findFolder = (folderName: string) => {
-  spinner = Ora(`正在搜索 ${chalk.blueBright(folderName)} ......`)
+  spinner = Ora(`正在搜索 「${chalk.blueBright(folderName)}」 ......`)
   spinner.start()
   // 找出所有目标文件夹
   const targetFolders = deepFindFolder(resolve(process.cwd()), folderName)
+  spinner.stop()
   if (!targetFolders.length) {
-    spinner.fail(`找不到 ${chalk.blueBright(folderName)} 文件夹！`)
-    spinner.stop()
-    return
-  } else {
-    spinner.succeed(
-      `发现 ${chalk.blueBright(targetFolders.length)} 个 ${chalk.blueBright(
-        folderName
-      )} 文件夹！`
+    spinner.fail(
+      `找不到「${chalk.blueBright(folderName)}」，请检查名称是否正确！`
     )
+  } else {
     inquirer
       .prompt([
         {
           type: 'checkbox',
-          message: '请选择需要压缩图片的文件夹?',
+          message:
+            chalk.green('[@miya/tiny]') + ' 请选择「目标文件夹」(可多选)?',
           choices: targetFolders.map(item => ({ value: item, name: item })),
           name: 'folderList',
           pageSize: 10
@@ -101,8 +105,8 @@ mapFolder = async (folderList: Array<string>) => {
     target = [...target, ...deepFindImg(path)]
   })
   if (target.length) {
-    const noCompressList: Array<imageType> = []
-    const hasCompressList: Array<imageType> = []
+    const noCompressList: Array<imageType> = [] // 未压缩列表
+    const hasCompressList: Array<imageType> = [] // 已压缩列表
     let len = 0
 
     while (len < target.length) {
@@ -152,16 +156,29 @@ mapFolder = async (folderList: Array<string>) => {
     // 已压缩的图片数量
     const hasCompressImageNum = hasCompressList.length - hasCompressSvgaNum
 
-    spinner.succeed(
-      `发现 ${chalk.blue(target.length)} 个资源!\n已压缩: ${chalk.green(
-        hasCompressImageNum
-      )} 个图片, ${chalk.green(hasCompressSvgaNum)} 个svga\n可压缩: ${chalk.red(
-        noCompressImageNum
-      )} 个图片, ${chalk.red(noCompressSvgaNum)} 个svga\n`
-    )
+    CG({
+      options: {
+        headerVisible: true
+      },
+      columns: ['类型', '可压缩', '已压缩', '总数'],
+      rows: [
+        [
+          '图片',
+          chalk.red(noCompressImageNum),
+          chalk.green(hasCompressImageNum),
+          chalk.blue(noCompressImageNum + hasCompressImageNum)
+        ],
+        [
+          'SVGA',
+          chalk.red(noCompressSvgaNum),
+          chalk.green(hasCompressSvgaNum),
+          chalk.blue(noCompressSvgaNum + hasCompressSvgaNum)
+        ]
+      ]
+    })
 
     if (!noCompressList.length) {
-      spinner.fail(`当前没有可压缩资源！`)
+      spinner.fail(`「目标文件夹内」找不到「可压缩」的资源！`)
       spinner.stop()
       return
     }
@@ -169,7 +186,7 @@ mapFolder = async (folderList: Array<string>) => {
       .prompt([
         {
           type: 'list',
-          message: '请选择需要压缩模式?',
+          message: chalk.green('[@miya/tiny]') + ' 请选择压缩模式?',
           name: 'compressType',
           choices: [
             {
@@ -185,7 +202,7 @@ mapFolder = async (folderList: Array<string>) => {
         },
         {
           type: 'checkbox',
-          message: '请选择需要压缩的图片?',
+          message: chalk.green('[@miya/tiny]') + ' 请选择需要压缩的图片?',
           name: 'compressList',
           choices: target.map(img => ({ value: img, name: img.path })),
           pageSize: 10,
@@ -205,7 +222,7 @@ mapFolder = async (folderList: Array<string>) => {
           // 根据用户选择处理对应的资源
           const list = compressType == 'all' ? noCompressList : compressList
           if (!list.length) {
-            spinner.fail(`当前没有可压缩资源！`)
+            spinner.fail(`请至少选择一个！`)
             spinner.stop()
             return
           }
@@ -247,6 +264,7 @@ mapFolder = async (folderList: Array<string>) => {
           let succeedNum = 0 // 成功资源数
           let failNum = 0 // 失败资源数
           const failMsg: Array<string> = [] // 失败列表
+          let outputTabel: Idetail[] = []
           // 初始化进度条
           bar.render({
             current: 0,
@@ -258,6 +276,8 @@ mapFolder = async (folderList: Array<string>) => {
             work.send(tasks)
             // 接收任务完成
             work.on('message', (details: Idetail[]) => {
+              outputTabel = outputTabel.concat(details)
+
               // 统计 成功/失败 个数
               details.forEach((item: Idetail) => {
                 if (item.output) {
@@ -286,19 +306,50 @@ mapFolder = async (folderList: Array<string>) => {
                     spinner.fail(msg)
                   })
                 }
+
+                // 打印表格
+                CG({
+                  options: {
+                    headerVisible: true
+                  },
+                  columns: [
+                    '名称',
+                    '原体积',
+                    '现体积',
+                    '压缩率',
+                    '耗时',
+                    '状态'
+                  ],
+                  rows: [
+                    ...outputTabel.map(item => [
+                      chalk.blue(filterFileName(item.path)),
+                      chalk.red(byteSize(item.input)),
+                      chalk.green(byteSize(item.output)),
+                      !item.ratio
+                        ? chalk.red('0 %')
+                        : chalk.green((item.ratio * 100).toFixed(4) + ' %'),
+                      chalk.cyan(item.time + ' ms'),
+                      item.output ? chalk.green('success') : chalk.red('fail')
+                    ])
+                  ]
+                })
+
+                const totalRatio = ratio / succeedNum
+
                 spinner.succeed(
-                  `资源压缩完成!\n原体积: ${chalk.green(
+                  `资源压缩完成! \n原体积: ${chalk.red(
                     byteSize(inputSize)
-                  )}\n现体积: ${chalk.green(
-                    byteSize(outputSize)
-                  )}\n压缩率: ${chalk.green(
-                    ((ratio / succeedNum) * 100).toFixed(4) + '%'
-                  )}\n成功率: ${chalk.green(
-                    ((succeedNum / list.length) * 100).toFixed(2) + '%'
-                  )}\n进程数: ${chalk.green(
-                    works.length
-                  )}\n总耗时: ${chalk.green(+new Date() - dateStart + 'ms')}\n`
+                  )}\n现体积: ${chalk.green(byteSize(outputSize))}\n压缩率: ${
+                    totalRatio
+                      ? chalk.green((totalRatio * 100).toFixed(4) + ' %')
+                      : chalk.red('0 %')
+                  }\n成功率: ${chalk.green(
+                    ((succeedNum / list.length) * 100).toFixed(2) + ' %'
+                  )}\n进程数: ${chalk.blue(works.length)}\n总耗时: ${chalk.cyan(
+                    +new Date() - dateStart + ' ms'
+                  )}\n`
                 )
+
                 cluster.disconnect()
               }
             })
@@ -351,7 +402,7 @@ export default () => {
     .prompt([
       {
         type: 'input',
-        message: '请输入文件夹名称?',
+        message: chalk.green('[@miya/tiny]') + ' 请输入「文件夹名称」?',
         name: 'folderName'
       }
     ])
