@@ -46,8 +46,7 @@ findFolder = (folderName: string) => {
       .prompt([
         {
           type: 'checkbox',
-          message:
-            chalk.green('[@miya/tiny]') + ' 请选择「目标文件夹」(可多选)?',
+          message: chalk.green('[yx-tiny]') + ' 请选择「目标文件夹」(可多选)?',
           choices: targetFolders.map(item => ({ value: item, name: item })),
           name: 'folderList',
           pageSize: 10
@@ -186,7 +185,7 @@ mapFolder = async (folderList: Array<string>) => {
       .prompt([
         {
           type: 'list',
-          message: chalk.green('[@miya/tiny]') + ' 请选择压缩模式?',
+          message: chalk.green('[yx-tiny]') + ' 请选择压缩模式?',
           name: 'compressType',
           choices: [
             {
@@ -202,7 +201,7 @@ mapFolder = async (folderList: Array<string>) => {
         },
         {
           type: 'checkbox',
-          message: chalk.green('[@miya/tiny]') + ' 请选择需要压缩的图片?',
+          message: chalk.green('[yx-tiny]') + ' 请选择需要压缩的图片?',
           name: 'compressList',
           choices: target.map(img => ({ value: img, name: img.path })),
           pageSize: 10,
@@ -402,7 +401,7 @@ export default () => {
     .prompt([
       {
         type: 'input',
-        message: chalk.green('[@miya/tiny]') + ' 请输入「文件夹名称」?',
+        message: chalk.green('[yx-tiny]') + ' 请输入「文件夹名称」?',
         name: 'folderName'
       }
     ])

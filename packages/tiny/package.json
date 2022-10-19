@@ -58,6 +58,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.9",
     "chalk": "4.1.0",
+    "console-grid": "^2.0.1",
     "inquirer": "8.0.0",
     "ora": "5.4.1",
     "pako": "1.0.6",
